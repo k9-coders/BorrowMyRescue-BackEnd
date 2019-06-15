@@ -1,0 +1,25 @@
+{
+  "name": "borrowmyrescue-backend",
+  "version": "1.0.0",
+  "description": "Borrow My Resue Project for TechReturners June 2019",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/k9-coders/BorrowMyRescue-BackEnd.git"
+  },
+  "author": "Jackie Carter",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/k9-coders/BorrowMyRescue-BackEnd/issues"
+  },
+  "homepage": "https://github.com/k9-coders/BorrowMyRescue-BackEnd#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mysql": "^2.17.1",
+    "serverless-http": "^2.0.2"
+  }
+}
