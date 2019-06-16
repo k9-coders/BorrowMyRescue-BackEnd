@@ -20,7 +20,8 @@ const connection = mysql.createConnection({
   database: "borrowMyRescueDB"
 });
 
- // get dogs list from database
+// code to process dog data
+// get dogs list from database
  app.get("/dogs", function(request, response) {
     // select all the fields in the Dogs table in the 
     // database
@@ -43,8 +44,45 @@ const connection = mysql.createConnection({
     });
   });
 
+  // post dog details to database
+  app.post("/dogs", function(request, response) {
+    const dogToBeSaved = request.body;
+    console.log(dogToBeSaved);
+    connection.query('INSERT INTO Dogs SET ?', dogToBeSaved, function (error, results, fields) {
+      if (error) {
+      console.log("Error saving new task", error);
+      response.status(500).json({
+        error: error
+      });
+      } else {
+        response.json({
+        dogId: results.insertId
+        });
+      }
+    });
+  });
+
+  // delete dog from database
+  // example of using a parameter for data update
+  app.delete("/dogs/:dogId", function(request, response) {
+    const query =
+      "DELETE FROM Dogs WHERE dogId = " + connection.escape(request.params.dogId);
+    connection.query(query, (err, deleteResults) => {
+      if (err) {
+        console.log("Error deleting Task", err);
+        response.status(500).json({
+          error: err
+        });
+      } else {
+          response.status(200).send("Dog details deleted");
+      }
+    });
+  });
+
+  // code to process borrower data
+
   // get borrowers list from database
- app.get("/borrowers", function(request, response) {
+  app.get("/borrowers", function(request, response) {
     // select all the fields in the Borrowers table in the 
     // database
     let query = "SELECT * FROM Borrowers";
@@ -65,5 +103,43 @@ const connection = mysql.createConnection({
       }
     });
   });
+
+  // post borrower details to database
+  app.post("/borrowers", function(request, response) {
+    const borrowerToBeSaved = request.body;
+    console.log(borrowerToBeSaved);
+    connection.query('INSERT INTO Borrowers SET ?', borrowerToBeSaved, function (error, results, fields) {
+      if (error) {
+      console.log("Error saving new task", error);
+      response.status(500).json({
+        error: error
+      });
+      } else {
+        response.json({
+        borrowerId: results.insertId
+        });
+      }
+    });
+  });
+
+  // delete borrower from database
+  // example of using a parameter for data update
+  app.delete("/borrowers/:borrowerId", function(request, response) {
+    const query =
+      "DELETE FROM Borrowers WHERE borrowerId = " + connection.escape(request.params.borrowerId);
+    connection.query(query, (err, deleteResults) => {
+      if (err) {
+        console.log("Error deleting Task", err);
+        response.status(500).json({
+          error: err
+        });
+        console.log(query);
+      } else {
+        response.status(200).send("Borrower deleted");
+      }
+    });
+  });
+
+// add code to retrieve dog/borrower matches from the database
 
 module.exports.handler = serverless(app);
