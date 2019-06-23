@@ -47,3 +47,12 @@ functions:
           path: borrowers/{borrowerId}
           method: put
           cors: true
+# events for matching dog to borrowers
+      - http:
+          path: matching/{dogId}
+          method: get
+          cors: true   
+      - http:
+          path: matching
+          method: put
+          cors: true

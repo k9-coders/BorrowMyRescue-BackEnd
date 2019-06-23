@@ -25,7 +25,8 @@ const connection = mysql.createConnection({
  app.get("/dogs", function(request, response) {
     // select all the fields in the Dogs table in the 
     // database
-    let query = "SELECT * FROM Dogs";
+    let query = "SELECT * FROM Dogs ORDER BY dogName";
+    //let query = "SELECT * FROM Dogs";
     // error handling
     // show an error message if the list of dogs
     // cannot be retrieved from the database
@@ -140,6 +141,36 @@ const connection = mysql.createConnection({
     });
   });
 
-// add code to retrieve dog/borrower matches from the database
+
+// code to retrieve dog/borrower matches from the database
+
+// code to match dog data
+// get potential borrowers list from database
+app.get("/matches/:dogId", function(request, response) {
+  // select all the fields in the Dogs table in the 
+  // database
+  let query = "SELECT b.borrowerId, d.dogId from Borrowers b " +
+  "INNER JOIN Dogs d on b.borrowerDogPace = d.dogPace AND " +
+  "b.borrowerDogSize = d.dogSize WHERE dogId = "
+  + connection.escape(request.params.dogId)
+  + " ORDER b.borrowerId";
+  let query = "SELECT * FROM Dogs ORDER BY dogName";
+  // error handling
+  // show an error message if the list of dogs
+  // cannot be retrieved from the database
+  connection.query(query, (err, queryResults) => {
+    if (err) {
+      console.log("Error fetching tasks", err);
+      response.status(500).json({
+        error: err
+      });
+    // dogs list can be retrieved return the query results
+    } else {
+      response.json({
+        dogs: queryResults
+      });
+    }
+  });
+});
 
 module.exports.handler = serverless(app);
