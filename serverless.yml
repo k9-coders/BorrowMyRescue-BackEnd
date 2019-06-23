@@ -54,5 +54,5 @@ functions:
           cors: true   
       - http:
           path: matching
-          method: put
+          method: post
           cors: true

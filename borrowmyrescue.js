@@ -146,15 +146,15 @@ const connection = mysql.createConnection({
 
 // code to match dog data
 // get potential borrowers list from database
-app.get("/matches/:dogId", function(request, response) {
+app.get("/matching/:dogId", function(request, response) {
   // select all the fields in the Dogs table in the 
   // database
-  let query = "SELECT b.borrowerId, d.dogId from Borrowers b " +
+  let query = "SELECT d.dogId, b.* from Borrowers b " +
   "INNER JOIN Dogs d on b.borrowerDogPace = d.dogPace AND " +
   "b.borrowerDogSize = d.dogSize WHERE dogId = "
-  + connection.escape(request.params.dogId)
-  + " ORDER b.borrowerId";
-  let query = "SELECT * FROM Dogs ORDER BY dogName";
+  + connection.escape(request.params.dogId);
+  //+ " ORDER BY b.borrowerId";
+  
   // error handling
   // show an error message if the list of dogs
   // cannot be retrieved from the database
@@ -164,10 +164,28 @@ app.get("/matches/:dogId", function(request, response) {
       response.status(500).json({
         error: err
       });
-    // dogs list can be retrieved return the query results
+    // possible matches list can be retrieved return the query results
     } else {
       response.json({
-        dogs: queryResults
+        borrowerMatches: queryResults
+      });
+    }
+  });
+});
+
+ // post borrowed dog record to the database
+ app.post("/matching", function(request, response) {
+  const borrowedDogToBeSaved = request.body;
+  console.log(borrowedDogToBeSaved);
+  connection.query('INSERT INTO Borrowers_Dogs SET ?', borrowedDogToBeSaved, function (error, results, fields) {
+    if (error) {
+    console.log("Error saving new task", error);
+    response.status(500).json({
+      error: error
+    });
+    } else {
+      response.json({
+        borrowerDogId: results.insertId
       });
     }
   });
