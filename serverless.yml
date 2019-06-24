@@ -48,11 +48,24 @@ functions:
           method: put
           cors: true
 # events for matching dog to borrowers
+# find possible matching borrowers for dogId selected
       - http:
           path: matching/{dogId}
           method: get
           cors: true   
+# post borrower/dog/day combination to Borrowers_Dogs table
       - http:
           path: matching
+          method: post
+          cors: true
+# events for dog ratings
+# obtain dog name and average rating for all dogs
+      - http:
+          path: dogRatings
+          method: get
+          cors: true  
+# post rating provided by borrower for the borrowed dog
+      - http:
+          path: dogRatings
           method: post
           cors: true

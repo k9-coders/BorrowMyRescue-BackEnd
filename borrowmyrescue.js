@@ -191,4 +191,50 @@ app.get("/matching/:dogId", function(request, response) {
   });
 });
 
+// code to retrieve look at/add dog ratings to the database
+
+// code to obtain list of average dog ratings for all the dogs
+app.get("/dogRatings", function(request, response) {
+  // select all the fields in the Dogs table in the 
+  // database
+  let query = "SELECT dr.dogId, d.dogName, AVG(dogRating) As Average_Rating " +
+    "FROM Dog_Rating dr INNER JOIN Dogs d ON dr.dogId = d.dogId " + 
+    "GROUP BY dr.dogId ORDER BY d.dogName";
+
+  // error handling
+  // show an error message if the list of dogs
+  // cannot be retrieved from the database
+  connection.query(query, (err, queryResults) => {
+    if (err) {
+      console.log("Error fetching tasks", err);
+      response.status(500).json({
+        error: err
+      });
+    // possible matches list can be retrieved return the query results
+    } else {
+      response.json({
+        dogRatings: queryResults
+      });
+    }
+  });
+});
+
+ // post borrowed dog record to the database
+ app.post("/dogRatings", function(request, response) {
+  const dogRatingToBeSaved = request.body;
+  console.log(dogRatingToBeSaved);
+  connection.query('INSERT INTO Dog_Rating SET ?', dogRatingToBeSaved, function (error, results, fields) {
+    if (error) {
+    console.log("Error saving new task", error);
+    response.status(500).json({
+      error: error
+    });
+    } else {
+      response.json({
+        dogRatingId: results.insertId
+      });
+    }
+  });
+});
+
 module.exports.handler = serverless(app);
